@@ -141,9 +141,20 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'username' => [
+            'required' => 'Harap mengisi username',
+            'unique' => 'Username telah dipakai',
+            'min' => 'Username minimal :min karakter',
+            'max' => 'Username maksimal :max karakter',
         ],
+        'nama' => [
+            'required' => 'Harap mengisi nama'
+        ],
+        'password' => [
+            'required' => 'Harap mengisi password',
+            'min' => 'Password minimal :min karakter',
+            'max' => 'Password maksimal :max karakter'
+        ]
     ],
 
     /*
