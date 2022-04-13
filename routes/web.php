@@ -13,5 +13,6 @@ Route::middleware(['guest'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function() {
-    Route::get('/', [IndexController::class, 'create'])->name('dashboard');
+    Route::get('/',             [IndexController::class, 'create'])->name('dashboard');
+    Route::post('/',            [IndexController::class, 'store'])->name("dashboard.post");
 });

@@ -154,6 +154,9 @@ return [
             'required' => 'Harap mengisi password',
             'min' => 'Password minimal :min karakter',
             'max' => 'Password maksimal :max karakter'
+        ],
+        'kamar' => [
+            'required' => 'Harap memilih kamar'
         ]
     ],
 
