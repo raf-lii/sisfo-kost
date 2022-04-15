@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticateController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\IndexController;
 
 Route::middleware(['guest'])->group(function(){
@@ -14,5 +15,7 @@ Route::middleware(['guest'])->group(function(){
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/',             [IndexController::class, 'create'])->name('dashboard');
-    Route::post('/',            [IndexController::class, 'store'])->name("dashboard.post");
+    Route::post('/',            [IndexController::class, 'show'])->name("dashboard.post");
+    Route::get('/booking',      [BookingController::class, 'create'])->name("booking");
+    Route::post('/booking',     [BookingController::class, 'store'])->name('booking.post');
 });

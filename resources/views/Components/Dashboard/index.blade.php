@@ -32,6 +32,11 @@
             </div>
         </div>
     </div>
+    @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
     <div class="col-md-12 col-12">
         <div class="card shadow">
             <div class="card-body">
@@ -150,7 +155,6 @@
 
             $.ajax({
                 url: "<?php echo route('dashboard.post'); ?>",
-                // dataType: "json",
                 type: "POST",
                 data: {
                     "_token": "<?php echo csrf_token(); ?>",
@@ -159,17 +163,24 @@
                     "checkOut": checkOut
                 },
                 success: function(res) {
-                    // console.log(res);
                     $("#bookingDetail").empty();
                     $("#bookingDetail").html(res);
                 },
                 error: function(e) {
-                    console.log(e);
                     $("#bookingDetail").empt();
                     $("#bookingDetail").html("<p class='text-danger fs-5'>Terjadi kesalahan harap reload page</p>")
                 }
             })
         })
+
+        $("#continuePayment").on("click", function() {
+            console.log("tes");
+            var kamar = $("input[name=kamar]:checked").val();
+            var checkIn = $("#checkIn").val();
+            var checkOut = $("#checkOut").val();
+
+            location.href = "<?php echo env('APP_URL'); ?>/booking?kamar="+kamar+"&checkIn="+checkIn+"&checkOut="+checkOut;
+        });
     })
 </script>
 @endsection

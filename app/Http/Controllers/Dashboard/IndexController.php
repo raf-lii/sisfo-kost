@@ -21,7 +21,7 @@ class IndexController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function show(Request $request)
     {
         $request->validate([
             'kamar' => 'required',
@@ -31,12 +31,14 @@ class IndexController extends Controller
 
         $kamar = DaftarKamar::where('id', $request->kamar)->firstOrFail();
 
-        return "<p>Check In : $request->checkIn</p>".
+        return "<div class='alert alert-secondary mt-2'>".
+               "<p>Check In : $request->checkIn</p>".
                "<p>Check Out : $request->checkOut</p>".
                "<p class='fw-bold fs-1'>Harus Dibayar</p>".
                "<p>Biaya Deposit : 0</p>".
                "<p>Harga Sewa : $kamar->harga</p>".
                "<br>".
-               "<p class='fw-bold'>Total pembayaran : $kamar->harga ";
+               "<p class='fw-bold'>Total pembayaran : $kamar->harga ".
+               "</div>";
     }
 }
