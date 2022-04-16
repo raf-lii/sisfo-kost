@@ -20,7 +20,7 @@
                 <form>
                     <div class="mb-3">
                         <label class="form-label text-muted">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="" placeholder="Masukkan nama lengkap sesuai dengan tanda pengenal">
+                        <input type="text" class="form-control" id="nama" placeholder="Masukkan nama lengkap sesuai dengan tanda pengenal">
                     </div>
 
                     <div class="row">
@@ -39,6 +39,26 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="" class="form-label">Jenis Pembayaran</label>
+                                <select class="form-control" id="jenisPembayaran">
+                                    @foreach($KategoriPembayaran as $tipe)
+                                    <option value="{{ $tipe->id }}">{{ $tipe->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="" class="form-label">Tipe Pembayaran</label>
+                                <select id="tipePembayaran" class="form-control">
+                                    <option selected>Pilih Jenis Pembayaran</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -99,4 +119,51 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#jenisPembayaran").change(function() {
+            var jenisPembayaran = $("#jenisPembayaran option:selected").val();
+
+            $.ajax({
+                url: "<?php echo route('ajax.tipePembayaran') ?>",
+                type: "POST",
+                dataType: "JSON",
+                data: {
+                    "_token": "<?php echo csrf_token() ?>",
+                    "kategoriPembayaran": jenisPembayaran
+                },
+                success: function(res) {
+                    $("#tipePembayaran").empty();
+                    $("#tipePembayaran").append("<option selected>Pilih Tipe Pembayaran</option>")
+                    res.data.forEach((curr, index) => {
+                        $("#tipePembayaran").append(`<option value='${curr.kode_channel}'>${curr.nama}</option>`)
+                    });
+                }
+            });
+        });
+
+        $("#continuePayment").on("click", function() {
+            var namaPemesan = $("#nama").val();
+            var dataKonfirmasi = 'Nama Pemesan : ' + namaPemesan + "<br>" +
+                                'Check-in : <?php echo $CheckIn?><br>'+
+                                'Tanggal Check-out : <?php echo $CheckOut ?><br>'+
+                                'Total Biaya : <?php echo number_format($BiayaSewa,0,',','.') ?>'
+            Swal.fire({
+                background: '#fff',
+                color: '#000',
+                titleText: 'Lanjutkan Pembelian?',
+                html: `${dataKonfirmasi}`,
+                showCancelButton: true,
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    title: 'swal-title',
+                    htmlContainer: 'swal-text'
+                }
+
+            })
+        })
+    });
+</script>
 @endsection

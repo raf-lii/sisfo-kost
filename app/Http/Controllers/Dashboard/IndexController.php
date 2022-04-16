@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PengaturanKost;
 use App\Models\DaftarKamar;
+use Illuminate\Support\Carbon;
 
 class IndexController extends Controller
 {
@@ -30,15 +31,22 @@ class IndexController extends Controller
         ]);
 
         $kamar = DaftarKamar::where('id', $request->kamar)->firstOrFail();
+        $checkIn = Carbon::parse($request->checkIn);
+        $checkOut = Carbon::parse($request->checkOut);
+        
+        $perbedaanBulan = $checkIn->floatDiffInMonths($checkOut);
+        if (!is_int($perbedaanBulan)) return response()->json(['status' => false, 'message' => 'Tanggal checkin & checkout harus kelipatan 1 bulan!'], 400);
+
+        $hargaSewa = $kamar->harga * $perbedaanBulan;
 
         return "<div class='alert alert-secondary mt-2'>".
                "<p>Check In : $request->checkIn</p>".
                "<p>Check Out : $request->checkOut</p>".
                "<p class='fw-bold fs-1'>Harus Dibayar</p>".
                "<p>Biaya Deposit : 0</p>".
-               "<p>Harga Sewa : $kamar->harga</p>".
+               "<p>Harga Sewa : $hargaSewa ($perbedaanBulan Bulan)</p>".
                "<br>".
-               "<p class='fw-bold'>Total pembayaran : $kamar->harga ".
+               "<p class='fw-bold'>Total pembayaran : $hargaSewa ".
                "</div>";
     }
 }

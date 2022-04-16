@@ -33,9 +33,9 @@
         </div>
     </div>
     @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
     @endif
     <div class="col-md-12 col-12">
         <div class="card shadow">
@@ -63,6 +63,7 @@
     </div>
     <div class="col-md-6 col-12">
         @foreach($daftarKamar as $kamar)
+        @if($kamar->stock > 0)
         <div class="card shadow">
             <div class="row g-0 align-items-center">
                 <div class="col-md-4">
@@ -92,6 +93,7 @@
                 </div>
             </div>
         </div>
+        @endif
         @endforeach
     </div>
     <div class="col-md-6 col-12">
@@ -121,6 +123,7 @@
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
@@ -128,7 +131,6 @@
 
         $("#checkIn").flatpickr({
             defaultDate: "today",
-            allowInput: true,
             minDate: "today",
             dateFormat: "d M Y",
             onChange: function(selectedDates, dateStr) {
@@ -142,10 +144,12 @@
             defaultDate: new Date($("#checkIn").val()).fp_incr(30),
             allowInput: true,
             dateFormat: "d M Y",
-            onChange: function(selectedDates, dateStr) {
-                var date = new Date(dateStr).fp_incr(-30);
-                $("#checkIn").val(date.getDate() + " " + strArray[date.getMonth()] + " " + date.getFullYear());
-            }
+            "enable": [
+                function(date) {
+                    var tglCheckin = new Date($("#checkIn").val());
+                    return (date.getDate() == tglCheckin.getDate())
+                }
+            ],
         })
 
         $("input[type=radio][name=kamar]").change(function() {
@@ -167,19 +171,18 @@
                     $("#bookingDetail").html(res);
                 },
                 error: function(e) {
-                    $("#bookingDetail").empt();
-                    $("#bookingDetail").html("<p class='text-danger fs-5'>Terjadi kesalahan harap reload page</p>")
+                    alert(e.responseJSON.message);
                 }
             })
         })
 
         $("#continuePayment").on("click", function() {
-            console.log("tes");
+
             var kamar = $("input[name=kamar]:checked").val();
             var checkIn = $("#checkIn").val();
             var checkOut = $("#checkOut").val();
 
-            location.href = "<?php echo env('APP_URL'); ?>/booking?kamar="+kamar+"&checkIn="+checkIn+"&checkOut="+checkOut;
+            location.href = "<?php echo env('APP_URL'); ?>/booking?kamar=" + kamar + "&checkIn=" + checkIn + "&checkOut=" + checkOut;
         });
     })
 </script>

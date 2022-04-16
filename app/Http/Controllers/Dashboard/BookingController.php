@@ -7,6 +7,7 @@ use App\Models\DaftarKamar;
 use App\Models\PengaturanKost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\KategoriPembayaran;
 
 class BookingController extends Controller
 {
@@ -18,6 +19,8 @@ class BookingController extends Controller
             'checkOut' => 'required|date|date_format:d M Y|after:checkIn'            
         ]);
 
+        if($request->kamar == "undefined") return redirect(route('dashboard'))->with('error', 'Harap pilih kamar terlebih dahulu');
+        
         $daftarKamar = DaftarKamar::where('id', $request->kamar)->first();
         $dataKost = PengaturanKost::pluck('deskripsi');
 
@@ -32,6 +35,9 @@ class BookingController extends Controller
         //Melakukan pengecekan apakah tanggal checkin dan checkout berjarak minimal 1 bulan
         if($checkIn->floatDiffInMonths($checkOut) < 1) return redirect(route('dashboard'))->with('error', 'Minimal pemesanan 1 bulan!');
         
+        //Check Stok Kamar
+        if($daftarKamar->stock <= 0) return redirect(route('dashboard'))->with('error', 'Kamar yang anda pilih telah penuh');
+
         $totalSewa = $perbedaanBulan * $daftarKamar->harga;
 
         return view('Components.Dashboard.booking', [
@@ -41,7 +47,8 @@ class BookingController extends Controller
             'CheckIn' => $request->checkIn,
             'CheckOut' => $request->checkOut,
             'PerbedaanBulan' => $perbedaanBulan,
-            'BiayaSewa' => $totalSewa
+            'BiayaSewa' => $totalSewa,
+            'KategoriPembayaran' => KategoriPembayaran::where('status', 'active')->get()
         ]);
     }
 }

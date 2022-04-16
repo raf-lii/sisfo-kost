@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\AuthenticateController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\IndexController;
+use App\Http\Controllers\Pembayaran\KategoriPembayaranController;
+use App\Http\Controllers\Pembayaran\TipePembayaranController;
 
 Route::middleware(['guest'])->group(function(){
     Route::get('/masuk',        [AuthenticateController::class, 'create'])->name("login");
@@ -14,8 +16,10 @@ Route::middleware(['guest'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function() {
-    Route::get('/',             [IndexController::class, 'create'])->name('dashboard');
-    Route::post('/',            [IndexController::class, 'show'])->name("dashboard.post");
-    Route::get('/booking',      [BookingController::class, 'create'])->name("booking");
-    Route::post('/booking',     [BookingController::class, 'store'])->name('booking.post');
+    Route::get('/',                 [IndexController::class, 'create'])->name('dashboard');
+    Route::post('/',                [IndexController::class, 'show'])->name("dashboard.post");
+    Route::get('/booking',          [BookingController::class, 'create'])->name("booking");
+    Route::post('/booking',         [BookingController::class, 'store'])->name('booking.post');
+
+    Route::post('/tipe-pembayaran', [TipePembayaranController::class, 'show'])->name('ajax.tipePembayaran');
 });
