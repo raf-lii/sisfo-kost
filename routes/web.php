@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/',                 [IndexController::class, 'create'])->name('dashboard');
     Route::post('/',                [IndexController::class, 'show'])->name("dashboard.post");
     Route::get('/booking',          [BookingController::class, 'create'])->name("booking");
-    Route::post('/booking',         [BookingController::class, 'store'])->name('booking.post');
+    Route::post('/bookings',         [BookingController::class, 'store'])->name('booking.post');
 
     Route::post('/tipe-pembayaran', [TipePembayaranController::class, 'show'])->name('ajax.tipePembayaran');
 });

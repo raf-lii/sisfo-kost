@@ -10,7 +10,8 @@ class TipePembayaranController extends Controller
 {
     public function show(Request $request)
     {
-        $tipePembayaran = TipePembayaran::where('kategori_pembayaran', $request->kategoriPembayaran)->get();
+        $tipePembayaran = TipePembayaran::where('kategori_pembayaran', $request->kategoriPembayaran)
+                          ->select("id","nama")->get();
 
         return response()->json([
             'data' => $tipePembayaran

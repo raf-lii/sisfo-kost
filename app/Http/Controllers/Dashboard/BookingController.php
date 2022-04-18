@@ -8,6 +8,8 @@ use App\Models\PengaturanKost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Models\KategoriPembayaran;
+use App\Models\DaftarBooking;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -50,5 +52,33 @@ class BookingController extends Controller
             'BiayaSewa' => $totalSewa,
             'KategoriPembayaran' => KategoriPembayaran::where('status', 'active')->get()
         ]);
+    }
+    
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'email' => 'required',
+            'nomor' => 'required|numeric|min:11:max:13',
+            'checkin' => 'required|date|date_format:d M Y|before:checkout',
+            'checkout' => 'required|date|date_format:d M Y|after:checkin',
+            'kamar' => 'required',
+            'tipe' => 'required'
+        ]);
+
+        $invoiceId = Str::random("8");
+
+        $daftarBooking = new DaftarBooking();
+        $daftarBooking->invoice_id = $invoiceId;
+        $daftarBooking->nama = $request->nama;
+        $daftarBooking->email = $request->email;
+        $daftarBooking->nomor = $request->nomor;
+        $daftarBooking->id_kamar = $request->kamar;
+        $daftarBooking->checkin = $request->checkin;
+        $daftarBooking->checkout = $request->checkout;
+        $daftarBooking->status_booking = "Menunggu Pembayaran";
+        $daftarBooking->save();
+
+        return response()->json(['status' => true]);
     }
 }

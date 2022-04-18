@@ -18,23 +18,24 @@
             <div class="card-body">
                 <h4 class="mb-3 header-title mt-0">Data Pribadi</h4>
                 <form>
+                    @csrf
                     <div class="mb-3">
                         <label class="form-label text-muted">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="nama" placeholder="Masukkan nama lengkap sesuai dengan tanda pengenal">
+                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama lengkap sesuai dengan tanda pengenal">
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
                                 <label class="form-label">Alamat Email</label>
-                                <input type="email" class="form-control" placeholder="email@gmail.com">
+                                <input type="email" id="email" class="form-control" name="email" placeholder="email@gmail.com">
                             </div>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Nomor Handphone</label>
                             <div class="mb-3 input-group">
                                 <div class="input-group-text">+62</div>
-                                <input type="number" class="form-control" placeholder="Cth : 8971230123">
+                                <input type="number" id="nomor" class="form-control" name="nomor" placeholder="Cth : 8971230123">
                             </div>
                         </div>
                     </div>
@@ -44,6 +45,7 @@
                             <div class="mb-3">
                                 <label for="" class="form-label">Jenis Pembayaran</label>
                                 <select class="form-control" id="jenisPembayaran">
+                                    <option selected>Pilih</option>
                                     @foreach($KategoriPembayaran as $tipe)
                                     <option value="{{ $tipe->id }}">{{ $tipe->nama }}</option>
                                     @endforeach
@@ -53,8 +55,8 @@
                         <div class="col-6">
                             <div class="mb-3">
                                 <label for="" class="form-label">Tipe Pembayaran</label>
-                                <select id="tipePembayaran" class="form-control">
-                                    <option selected>Pilih Jenis Pembayaran</option>
+                                <select id="tipePembayaran" name="tipe" class="form-control">
+                                    <option>Pilih Jenis Pembayaran</option>
                                 </select>
                             </div>
                         </div>
@@ -135,24 +137,29 @@
                 },
                 success: function(res) {
                     $("#tipePembayaran").empty();
-                    $("#tipePembayaran").append("<option selected>Pilih Tipe Pembayaran</option>")
-                    res.data.forEach((curr, index) => {
-                        $("#tipePembayaran").append(`<option value='${curr.kode_channel}'>${curr.nama}</option>`)
+                    $("#tipePembayaran").append("<option>Pilih Tipe Pembayaran</option>")
+                    $.each(res.data, function(curr, index) {
+                        var el = `<option value='${index.id}' id='tipe'>${index.nama}</option>`;
+                        $("#tipePembayaran").append(el)
                     });
+
                 }
             });
         });
-
         $("#continuePayment").on("click", function() {
             var namaPemesan = $("#nama").val();
+            var emailPemesan = $("#email").val();
+            var nomorPemesan = $("#nomor").val();
+            var metodePembayaran = $("#tipePembayaran option:selected").val();
+
             var dataKonfirmasi = 'Nama Pemesan : ' + namaPemesan + "<br>" +
-                                'Check-in : <?php echo $CheckIn?><br>'+
-                                'Tanggal Check-out : <?php echo $CheckOut ?><br>'+
-                                'Total Biaya : <?php echo number_format($BiayaSewa,0,',','.') ?>'
+                'Check-in : <?php echo $CheckIn ?><br>' +
+                'Check-out : <?php echo $CheckOut ?><br>' +
+                'Total Biaya : <?php echo number_format($BiayaSewa, 0, ',', '.') ?>'
             Swal.fire({
                 background: '#fff',
                 color: '#000',
-                titleText: 'Lanjutkan Pembelian?',
+                titleText: 'Lanjutkan Pemesanan?',
                 html: `${dataKonfirmasi}`,
                 showCancelButton: true,
                 confirmButtonText: 'Ya',
@@ -161,7 +168,27 @@
                     title: 'swal-title',
                     htmlContainer: 'swal-text'
                 }
-
+            }).then(resp => {
+                if (resp.isConfirmed) {
+                    $.ajax({
+                        url: "<?php echo route('booking.post') ?>",
+                        type: "POST",
+                        dataType: "JSON",
+                        data: {
+                            "_token": "<?php echo csrf_token() ?>",
+                            "nama": namaPemesan,
+                            "email": emailPemesan,
+                            "nomor": nomorPemesan,
+                            "tipe": metodePembayaran,
+                            "checkin": "<?php echo $CheckIn ?>",
+                            "checkout": "<?php echo $CheckOut ?>",
+                            "kamar": "<?php echo $DataKamar->id ?>"
+                        },
+                        success: function(res){
+                            console.log(res)
+                        }
+                    })
+                }
             })
         })
     });

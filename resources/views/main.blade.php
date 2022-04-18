@@ -24,6 +24,23 @@
     <!-- icons -->
     <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
 
+    <style>
+        .swal-text {
+            color: black;
+            font-weight: 200;
+            text-align: left !important;
+            font-size: 16px !important;
+        }
+
+        .swal-title {
+            margin-bottom: 28px;
+            font-size: 16px !important;
+            color: white;
+            box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
+            padding: .8em 1em !important;
+            text-align: left !important;
+        }
+    </style>
 </head>
 
 <body class="loading" data-layout='{"mode": "light", "width": "fluid", "menuPosition": "fixed", "sidebar": { "color": "light", "size": "default", "showuser": false}, "topbar": {"color": "light"}, "showRightSidebarOnPageLoad": true}'>

@@ -157,6 +157,23 @@ return [
         ],
         'kamar' => [
             'required' => 'Harap memilih kamar'
+        ],
+        'nomor' => [
+            'required' => 'Harap mengisi nomor handphone',
+            'numeric' => 'Data yang anda masukkan tidak valid',
+            'min' => 'Nomor minimal :min digit',
+            'max' => 'Nomor maksimal :max digit',
+        ],
+        'checkin' => [
+            'required' => 'Harap mengisi tanggal check-in',
+            'date' => 'Tanggal check-in tidak valid',
+        ],
+        'checkout' => [
+            'required' => 'Harap mengisi tanggal check-out',
+            'date' => 'Tanggal check-out tidak valid'
+        ],
+        'kamar' => [
+            'required' => 'Kamar tidak valid'
         ]
     ],
 
