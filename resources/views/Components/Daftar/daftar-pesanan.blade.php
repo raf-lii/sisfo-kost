@@ -12,6 +12,13 @@
     </div>
 </div>
 <!-- end page title -->
+@if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+
 <div class="row">
     <div class="col-12">
         <div class="card shadow">
@@ -23,6 +30,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Tanggal</th>
+                                <th>Booking ID</th>
                                 <th>Kamar</th>
                                 <th>Check-in</th>
                                 <th>Check-out</th>
@@ -45,11 +53,12 @@
                             <tr>
                                 <th scope="row">{{ $i++ }}</th>
                                 <td>{{ $data->created_at }}</td>
+                                <td>{{ $data->invoice_id }}</td>
                                 <td>{{ $data->nama_kamar }}</td>
                                 <td>{{ $data->checkin }}</td>
                                 <td>{{ $data->checkout }}</td>
                                 <td><span class="badge bg-{{ $label }}">{{ $data->status_booking }}</span></td>
-                                <td><span class="badge bg-info"><i data-feather="eye"></i> Detail</span></td>
+                                <td><a href="{{ route('detail.booking', [$data->invoice_id]) }}" class="badge bg-info"><i data-feather="eye"></i> Detail</a></td>
                             </tr>
                         @endforeach
                         </tbody>
