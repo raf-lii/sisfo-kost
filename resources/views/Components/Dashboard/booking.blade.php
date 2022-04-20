@@ -155,7 +155,9 @@
             var dataKonfirmasi = 'Nama Pemesan : ' + namaPemesan + "<br>" +
                 'Check-in : <?php echo $CheckIn ?><br>' +
                 'Check-out : <?php echo $CheckOut ?><br>' +
-                'Total Biaya : <?php echo number_format($BiayaSewa, 0, ',', '.') ?>'
+                'Total Biaya : <?php echo number_format($BiayaSewa, 0, ',', '.') ?><br>'+
+                '<small class="text-red">*Harga diatas belum termasuk biaya admin</small>'
+                
             Swal.fire({
                 background: '#fff',
                 color: '#000',
@@ -184,8 +186,24 @@
                             "checkout": "<?php echo $CheckOut ?>",
                             "kamar": "<?php echo $DataKamar->id ?>"
                         },
-                        success: function(res){
-                            console.log(res)
+                        success: function(res) {
+                            Swal.fire({
+                                title: 'Berhasil memesan!',
+                                text: `Booking ID : ${res.bookingId}`,
+                                icon: 'success',
+                                background: '#f54266',
+                                color: '#ffff',
+                            });
+                            // window.location = 
+                        },
+                        error: function(e) {
+                            Swal.fire({
+                                title: 'Oops...',
+                                text: e.responseJSON.message,
+                                icon: 'error',
+                                background: '#f54266',
+                                color: '#ffff',
+                            });
                         }
                     })
                 }

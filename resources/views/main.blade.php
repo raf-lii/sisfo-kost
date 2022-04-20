@@ -26,7 +26,7 @@
 
     <style>
         .swal-text {
-            color: black;
+            color: #0000;
             font-weight: 200;
             text-align: left !important;
             font-size: 16px !important;
@@ -35,7 +35,7 @@
         .swal-title {
             margin-bottom: 28px;
             font-size: 16px !important;
-            color: white;
+            color: black;
             box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);
             padding: .8em 1em !important;
             text-align: left !important;

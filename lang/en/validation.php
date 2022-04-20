@@ -174,6 +174,9 @@ return [
         ],
         'kamar' => [
             'required' => 'Kamar tidak valid'
+        ],
+        'email' => [
+            'required' => 'Harap mengisi email'
         ]
     ],
 

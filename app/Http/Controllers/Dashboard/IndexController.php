@@ -31,6 +31,7 @@ class IndexController extends Controller
         ]);
 
         $kamar = DaftarKamar::where('id', $request->kamar)->firstOrFail();
+
         $checkIn = Carbon::parse($request->checkIn);
         $checkOut = Carbon::parse($request->checkOut);
         

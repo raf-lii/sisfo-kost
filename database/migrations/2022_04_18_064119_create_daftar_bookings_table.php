@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('daftar_bookings', function (Blueprint $table) {
             $table->id();
             $table->string("invoice_id");
+            $table->string("username");
             $table->string("nama");
             $table->string("email");
             $table->bigInteger("nomor");
