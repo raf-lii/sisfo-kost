@@ -37,4 +37,5 @@ Route::middleware(['auth'])->group(function() {
     //Daftar booking user route
     Route::get('/daftar-booking',               [DaftarPesananController::class, 'create'])->name('daftar.booking');    
     Route::get('/daftar-booking/{id}/detail',   [DaftarPesananController::class, 'show'])->name('detail.booking');
+    Route::get('/daftar-booking/{id}/bayar',    [DaftarPesananController::class, 'pay'])->name('pembayaran.booking');
 });
