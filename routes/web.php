@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticateController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Daftar\AdminDaftarPesananController;
 use App\Http\Controllers\Daftar\DaftarPesananController;
 use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\IndexController;
@@ -38,4 +39,10 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/daftar-booking',               [DaftarPesananController::class, 'create'])->name('daftar.booking');    
     Route::get('/daftar-booking/{id}/detail',   [DaftarPesananController::class, 'show'])->name('detail.booking');
     Route::get('/daftar-booking/{id}/bayar',    [DaftarPesananController::class, 'pay'])->name('pembayaran.booking');
+});
+
+Route::middleware(['auth', 'check.role'])->group(function(){
+    //Admin dashboard route
+    Route::get('/admin/daftar-booking',             [AdminDaftarPesananController::class, 'create'])->name('admin.daftar.booking');
+    Route::get('/admin/daftar-booking/{id}/detail', [AdminDaftarPesananController::class, 'show'])->name('admin.detail.booking');
 });

@@ -182,7 +182,17 @@
             var checkIn = $("#checkIn").val();
             var checkOut = $("#checkOut").val();
 
-            location.href = "<?php echo env('APP_URL'); ?>/booking?kamar=" + kamar + "&checkIn=" + checkIn + "&checkOut=" + checkOut;
+            if (!kamar || !checkIn || !checkOut) {
+                Swal.fire({
+                    title: 'Oops...',
+                    text: "Harap mengisi semua data yang diperlukan",
+                    icon: 'error',
+                    background: '#f54266',
+                    color: '#ffff',
+                });
+            }else{
+                location.href = "<?php echo env('APP_URL'); ?>/booking?kamar=" + kamar + "&checkIn=" + checkIn + "&checkOut=" + checkOut;
+            }
         });
     })
 </script>

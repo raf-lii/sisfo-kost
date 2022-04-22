@@ -18,7 +18,6 @@
 </div>
 @endif
 
-
 <div class="row">
     <div class="col-12">
         <div class="card shadow">
@@ -39,16 +38,18 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                                $i = 1;
+                            @endphp
                             @foreach($datas as $data)
                             @php
-                            $i = 1;
-                            if($data->status_booking == "Lunas"){
-                            $label = "success";
-                            }else if($data->status_booking == "Menunggu Pembayaran"){
-                            $label = "warning";
-                            }else if($data->status_booking == "Kadaluarsa"){
-                            $label = "error";
-                            }
+                                if($data->status_booking == "Lunas"){
+                                    $label = "success";
+                                }else if($data->status_booking == "Menunggu Pembayaran"){
+                                    $label = "warning";
+                                }else if($data->status_booking == "Kadaluarsa"){
+                                    $label = "error";
+                                }
                             @endphp
                             <tr>
                                 <th scope="row">{{ $i++ }}</th>

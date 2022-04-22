@@ -19,6 +19,7 @@ class DaftarPesananController extends Controller
         $data = DaftarBooking::where('username', Auth::user()->username)
                     ->join("daftar_kamars", "daftar_bookings.id_kamar", "=", "daftar_kamars.id")
                     ->select("daftar_bookings.*", "daftar_kamars.nama AS nama_kamar")
+                    ->orderBy('created_at', 'desc')
                     ->get();
 
         return view('Components.Daftar.daftar-pesanan', ['datas' => $data]);

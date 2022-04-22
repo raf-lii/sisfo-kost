@@ -13,6 +13,7 @@ use App\Models\DaftarPembayaran;
 use Illuminate\Support\Str;
 use App\Models\TipePembayaran;
 use App\Http\Controllers\Pembayaran\iPaymuController;
+use Illuminate\Support\Facades\Auth;
 
 class BookingController extends Controller
 {
@@ -107,6 +108,7 @@ class BookingController extends Controller
 
         $daftarBooking = new DaftarBooking();
         $daftarBooking->invoice_id = $invoiceId;
+        $daftarBooking->username = Auth::user()->username;
         $daftarBooking->nama = $request->nama;
         $daftarBooking->email = $request->email;
         $daftarBooking->nomor = $request->nomor;
@@ -118,6 +120,7 @@ class BookingController extends Controller
 
         $daftarPembayaran = new DaftarPembayaran();
         $daftarPembayaran->booking_id = $invoiceId;
+        $daftarPembayaran->username = Auth::user()->username;
         $daftarPembayaran->harga = $harga;
         $daftarPembayaran->no_pembayaran = $noPembayaran;
         $daftarPembayaran->metode = $tipe->nama;
