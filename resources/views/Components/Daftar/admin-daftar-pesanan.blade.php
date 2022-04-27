@@ -40,18 +40,18 @@
                         </thead>
                         <tbody>
                             @php
-                                $i = 1;
+                            $i = 1;
                             @endphp
                             @foreach($datas as $data)
-                                @php
-                                    if($data->status_booking == "Lunas"){
-                                        $label = "success";
-                                    }else if($data->status_booking == "Menunggu Pembayaran"){
-                                        $label = "warning";
-                                    }else if($data->status_booking == "Kadaluarsa"){
-                                        $label = "error";
-                                    }
-                                @endphp
+                            @php
+                            if($data->status_booking == "Lunas"){
+                            $label = "success";
+                            }else if($data->status_booking == "Menunggu Pembayaran"){
+                            $label = "warning";
+                            }else if($data->status_booking == "Kadaluarsa"){
+                            $label = "error";
+                            }
+                            @endphp
                             <tr>
                                 <th scope="row">{{ $i++ }}</th>
                                 <td>{{ $data->created_at }}</td>
@@ -62,14 +62,51 @@
                                 <td>{{ $data->checkout }}</td>
                                 <td><span class="badge bg-{{ $label }}">{{ $data->status_booking }}</span></td>
                                 <td>
-                                    <a href="{{ route('admin.detail.booking', [$data->invoice_id]) }}" class="badge bg-info"><i data-feather="eye"></i> Detail</a>
+                                    <a href="javascript:;" onclick="modal('Detail Pesanan #{{ $data->invoice_id }}','{{ route('admin.detail.booking', [$data->invoice_id]) }}')" class="badge bg-info"><i data-feather="eye"></i> Detail</a>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+                <div class="d-flex justify-content-center">
+                    {{ $datas->links('vendor.pagination.bootstrap-5') }}
+                </div>
             </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function modal(name, link) {
+        var myModal = new bootstrap.Modal($('#modal-detail'))
+        $.ajax({
+            type: "GET",
+            url: link,
+            beforeSend: function() {
+                $('#modal-detail-title').html(name);
+                $('#modal-detail-body').html('Loading...');
+            },
+            success: function(result) {
+                $('#modal-detail-title').html(name);
+                $('#modal-detail-body').html(result);
+            },
+            error: function() {
+                $('#modal-detail-title').html(name);
+                $('#modal-detail-body').html('There is an error...');
+            }
+        });
+        myModal.show();
+    }
+</script>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" id="modal-detail" style="border-radius:7%">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-detail-title"></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-detail-body"></div>
         </div>
     </div>
 </div>

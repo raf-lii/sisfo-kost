@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticateController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Daftar\AdminDaftarKamarController;
 use App\Http\Controllers\Daftar\AdminDaftarPesananController;
+use App\Http\Controllers\Daftar\AdminDaftarUserController;
 use App\Http\Controllers\Daftar\DaftarPesananController;
 use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\IndexController;
@@ -42,7 +44,24 @@ Route::middleware(['auth'])->group(function() {
 });
 
 Route::middleware(['auth', 'check.role'])->group(function(){
-    //Admin dashboard route
-    Route::get('/admin/daftar-booking',             [AdminDaftarPesananController::class, 'create'])->name('admin.daftar.booking');
-    Route::get('/admin/daftar-booking/{id}/detail', [AdminDaftarPesananController::class, 'show'])->name('admin.detail.booking');
+    //Daftar Pesanan Controller
+    Route::get('/admin/daftar-booking',                         [AdminDaftarPesananController::class, 'create'])->name('admin.daftar.booking');
+    Route::get('/admin/daftar-booking/{id}/detail',             [AdminDaftarPesananController::class, 'show'])->name('admin.detail.booking');
+
+    //Daftar User Controller
+    Route::get('/admin/daftar-user',                            [AdminDaftarUserController::class, 'create'])->name('admin.daftar.user');
+    Route::get('/admin/daftar-user/{id}/hapus',                 [AdminDaftarUserController::class, 'destroy'])->name('admin.hapus.user');
+
+    //Daftar Kamar Controller
+    Route::get('/admin/daftar-kamar',                           [AdminDaftarKamarController::class, 'create'])->name('admin.daftar.kamar');
+    Route::get('/admin/daftar-kamar/{id}/hapus',                [AdminDaftarKamarController::class, 'destroy'])->name('admin.hapus.kamar');
+    Route::post('/admin/daftar-kamar',                          [AdminDaftarKamarController::class, 'store'])->name('admin.tambah.kamar');
+    Route::get('/admin/daftar-kamar/{id}/detail',               [AdminDaftarKamarController::class, 'show'])->name('admin.detail.kamar');
+    Route::post('/admin/daftar-kamar/update',                   [AdminDaftarKamarController::class, 'patch'])->name('admin.update.kamar');
+
+    //Tipe Pembayaran Controller
+    Route::get('/admin/tipe-pembayaran',                        [TipePembayaranController::class, 'create'])->name('admin.tipe-pembayaran');
+    Route::get('/admin/tipe-pembayaran/update/{id}/{status}',   [TipePembayaranController::class, 'patch'])->name('admin.update.tipe-pembayaran');
+    Route::get('/admin/tipe-pembayaran/{id}/delete',            [TipePembayaranController::class, 'destroy'])->name('admin.hapus.tipe-pembayaran');
+    Route::post('/admin/tipe-pembayaran',                       [TipePembayaranController::class, 'store'])->name('admin.tambah.tipe-pembayaran');
 });

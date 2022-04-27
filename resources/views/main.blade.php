@@ -198,9 +198,16 @@
                             <div class="collapse" id="daftar">
                                 <ul class="nav-second-level">
                                     <li><a href="{{ route('admin.daftar.booking') }}">Pesanan</a></li>
-                                    <li><a href="project-detail.html">Detail</a></li>
+                                    <li><a href="{{ route('admin.daftar.user') }}">Pengguna</a></li>
+                                    <li><a href="{{ route('admin.daftar.kamar') }}">Kamar</a></li>
                                 </ul>
                             </div>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.tipe-pembayaran') }}">
+                                <i data-feather="credit-card"></i>
+                                <span> Kelola Tipe Pembayaran </span>
+                            </a>
                         </li>
                         @endif
                     </ul>
