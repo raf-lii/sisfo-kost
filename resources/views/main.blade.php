@@ -209,6 +209,12 @@
                                 <span> Kelola Tipe Pembayaran </span>
                             </a>
                         </li>
+                        <li>
+                            <a href="{{ route('admin.pengaturan-kost') }}">
+                                <i data-feather="settings"></i>
+                                <span> Pengaturan Kost </span>
+                            </a>
+                        </li>
                         @endif
                     </ul>
 

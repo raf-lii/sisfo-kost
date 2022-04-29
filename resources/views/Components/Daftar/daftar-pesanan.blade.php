@@ -43,7 +43,9 @@
                             @endphp
                             @foreach($datas as $data)
                             @php
-                                if($data->status_booking == "Lunas"){
+                                if($data->status_booking == "Jatuh Tempo"){
+                                    $label = "warning";
+                                }else if($data->status_booking == "Lunas" || $data->status_booking == "Selesai"){
                                     $label = "success";
                                 }else if($data->status_booking == "Menunggu Pembayaran"){
                                     $label = "warning";
@@ -62,6 +64,8 @@
                                 <td>
                                     @if($data->status_booking == "Menunggu Pembayaran")
                                     <a href="javascript:;" onclick='modal("Bayar Pesanan #{{ $data->invoice_id }}", "{{ route('pembayaran.booking', [$data->invoice_id]) }}")' class="badge bg-primary"><i data-feather="dollar-sign"></i> Bayar</a>
+                                    @elseif($data->status_booking == "Jatuh Tempo")
+                                    <a href="{{ route('perpanjang', [$data->id]) }}" class="badge bg-warning")><i data-feather="calendar"></i> Perpanjang</a>
                                     @elseif($data->status_booking == "Lunas")
                                     <a href="{{ route('detail.booking', [$data->invoice_id]) }}" class="badge bg-info"><i data-feather="eye"></i> Detail</a>
                                     @endif

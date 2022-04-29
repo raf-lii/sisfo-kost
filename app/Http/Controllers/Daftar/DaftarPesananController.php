@@ -19,7 +19,7 @@ class DaftarPesananController extends Controller
                     ->select("daftar_bookings.*", "daftar_kamars.nama AS nama_kamar")
                     ->orderBy('created_at', 'desc')
                     ->get();
-
+                                    
         return view('Components.Daftar.daftar-pesanan', ['datas' => $data]);
     }
 

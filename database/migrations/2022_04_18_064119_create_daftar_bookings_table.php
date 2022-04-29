@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer("id_kamar");
             $table->string("checkin");
             $table->string("checkout");
-            $table->enum("status_booking",["Kadaluarsa", "Menunggu Pembayaran", "Lunas"]);
+            $table->enum("status_booking",["Kadaluarsa", "Menunggu Pembayaran", "Lunas", "Jatuh Tempo", "Selesai"]);
             $table->timestamps();
         });
     }

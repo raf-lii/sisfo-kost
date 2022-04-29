@@ -9,9 +9,11 @@ use App\Http\Controllers\Daftar\AdminDaftarUserController;
 use App\Http\Controllers\Daftar\DaftarPesananController;
 use App\Http\Controllers\Dashboard\BookingController;
 use App\Http\Controllers\Dashboard\IndexController;
+use App\Http\Controllers\Dashboard\PerpanjangController;
 use App\Http\Controllers\Pembayaran\KategoriPembayaranController;
 use App\Http\Controllers\Pembayaran\TipePembayaranController;
 use App\Http\Controllers\Pembayaran\iPaymuController;
+use App\Http\Controllers\Pengaturan\PengaturanKostController;
 
 Route::post('/callback',                        [iPaymuController::class, 'handle'])->name('callback');
 
@@ -34,6 +36,9 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/booking',                      [BookingController::class, 'create'])->name("booking");
     Route::post('/bookings',                    [BookingController::class, 'store'])->name('booking.post');
     
+    //Perpanjang route
+    Route::get('/pesanan/{id}/perpanjang',      [PerpanjangController::class, 'create'])->name("perpanjang");
+
     //Ajax tipe pembayaran route
     Route::post('/tipe-pembayaran',             [TipePembayaranController::class, 'show'])->name('ajax.tipePembayaran');
 
@@ -64,4 +69,8 @@ Route::middleware(['auth', 'check.role'])->group(function(){
     Route::get('/admin/tipe-pembayaran/update/{id}/{status}',   [TipePembayaranController::class, 'patch'])->name('admin.update.tipe-pembayaran');
     Route::get('/admin/tipe-pembayaran/{id}/delete',            [TipePembayaranController::class, 'destroy'])->name('admin.hapus.tipe-pembayaran');
     Route::post('/admin/tipe-pembayaran',                       [TipePembayaranController::class, 'store'])->name('admin.tambah.tipe-pembayaran');
+
+    //Pengaturan Kost Controller
+    Route::get('/admin/pengaturan-kost',                        [PengaturanKostController::class, 'create'])->name('admin.pengaturan-kost');
+    Route::post('/admin/pengaturan-kost',                       [PengaturanKostController::class, 'patch'])->name('admin.update.pengaturan-kost');
 });
