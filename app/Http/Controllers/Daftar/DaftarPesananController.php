@@ -34,13 +34,17 @@ class DaftarPesananController extends Controller
                              "no_pembayaran","daftar_bookings.created_at", "daftar_pembayarans.status_pembayaran")
                     ->first();
 
+        //Jika data kosong maka akan diredirect ke route daftar booking dengan membawa pesan error
         if($data == []) return redirect(route('daftar.booking'))->with('error', 'Invoice tidak ditemukan!');
+        //Jika status pembayaran belum lunas maka akan diredirect ke route daftar.booking dengan pesan error
         if($data->status_pembayaran == "Belum Lunas") return redirect(route('daftar.booking'))->with('error', "Aksi gagal invoice #$id belum lunas");
 
+        //Melakukan parse tanggal checkin dan checkout yang didapat dari table daftar booking
         $checkIn = Carbon::parse($data->checkin);
         $checkOut = Carbon::parse($data->checkout);
-        $jangkaWaktu = $checkIn->floatDiffInMonths($checkOut);
 
+        //Menghitung perbedaan bulan checkin dan bulan checkout
+        $jangkaWaktu = $checkIn->floatDiffInMonths($checkOut);
 
         $dataKost = PengaturanKost::pluck('deskripsi');
 
@@ -53,6 +57,7 @@ class DaftarPesananController extends Controller
 
     public function pay($id)
     {
+        //Melakukan pencarian berdasarkan booking id pada table daftar_pembayarans
         $data = DaftarPembayaran::where('booking_id', $id)->select('metode', 'no_pembayaran', 'harga', 'created_at')->first();
 
         $template = "<div class='row'>
@@ -87,6 +92,8 @@ class DaftarPesananController extends Controller
                         <div class='card-header mt-2' id='no'>$data->no_pembayaran</div>
                     </div>";            
         }
+
+        //mengembalikan nilai dalam bentuk html
         return $template.$send;
     }
 }

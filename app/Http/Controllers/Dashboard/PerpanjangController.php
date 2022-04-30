@@ -57,7 +57,6 @@ class PerpanjangController extends Controller
 
         if ($tipe->kategori_pembayaran == 1) { //pembayaran dompet digital
             $iPaymuRes = $iPaymu->requestPayment($kamar->harga + ($kamar->harga * 0.025), $DaftarBooking->invoice_id, $DaftarBooking->nomor, 'qris', $tipe->kode_channel, $DaftarBooking->email);
-            dd($iPaymuRes);
         } else if ($tipe->kategori_pembayaran == 2) { // pembayaran virtual account
             $iPaymuRes = $iPaymu->requestPayment($kamar->harga + 5000, $DaftarBooking->invoice_id, $DaftarBooking->nomor, 'va', $tipe->kode_channel, $DaftarBooking->email);
         } else if ($tipe->kategori_pembayaran == 3) { //Pembayaran convenience store

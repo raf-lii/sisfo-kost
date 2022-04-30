@@ -15,19 +15,26 @@ class AdminDaftarKamarController extends Controller
 
     public function destroy($id)
     {
+        //Melakukan pencarian data pada table daftar_kamar berdasarkan id
         $data = DaftarKamar::where('id', $id)->first();
 
+        //Jika data kosong/tidak ditemukan maka akan membawa kembali user
+        //Kehalaman sebelumnya dengan membawa pesan error
         if(!$data) return back()->with('error', 'Kamar tidak ditemukan');
 
+        //Melakukan penghapusan gambar/thumbnail gambar
         unlink(public_path($data->gambar));
 
+        //Menghapus data yang dicari dari table daftar_kamar
         $data->delete();
 
+        //Mengembalikan user kehalaman sebelumnya dengan membawa pesan success
         return back()->with('success', 'Berhasil menghapus kamar');
     }
 
     public function store(Request $request)
     {
+        //Melakukan validasi terhadap request yang diterima
         $request->validate([
             'thumbnail' => 'required|file|mimes:jpg,png',
             'nama' => 'required',
@@ -35,10 +42,13 @@ class AdminDaftarKamarController extends Controller
             'stock' => 'required|numeric',
         ]);
 
+        //Mengambil input berbentuk file pada name thumbnail
         $file = $request->file('thumbnail');
         $folder = 'assets/kamar';
+        //Memindahkan file thumbnail
         $file->move($folder, $file->getClientOriginalName());
 
+        //Melakukan input data ke dalam table daftar_kamars
         $daftarKamar = new DaftarKamar();
         $daftarKamar->nama = $request->nama;
         $daftarKamar->harga = $request->harga;
@@ -46,11 +56,13 @@ class AdminDaftarKamarController extends Controller
         $daftarKamar->gambar = "/" . $folder . "/" . $file->getClientOriginalName();
         $daftarKamar->save();
 
+        //mengembalikan user kehalaman sebelumnya dengan membawa pesan success
         return back()->with('success', 'Berhasil menambahkan kamar');
     }
 
     public function show($id)
     {
+        //Melakukan pencarian data berdasarkan id di table daftar_kamars
         $kamar = DaftarKamar::where('id', $id)->first();
 
         $send = "<form action='".route('admin.update.kamar')."' method='POST'>
@@ -77,19 +89,23 @@ class AdminDaftarKamarController extends Controller
                 <button type='submit' class='btn btn-primary'>Submit</button>
                 </form>";
 
+        //Mengembalikan dalam format html
         return $send;
     }
 
     public function patch(Request $request)
     {
+        //Melakukan pencarian data berdasarkan id di table daftar_kamars
         $kamar = DaftarKamar::where('id', $request->id)->first();
 
+        //Melakukan update berdasarkan data yang telah dicari
         $kamar->update([
             'nama' => $request->nama,
             'harga' => $request->harga,
             'stock' => $request->stock
         ]);
 
+        //Mengembalikan user kehalaman sebelumnya dengan membawa pesan success
         return back()->with('success', 'Berhasil update kamar');
     }
 }

@@ -36,10 +36,13 @@ class IndexController extends Controller
         $checkOut = Carbon::parse($request->checkOut);
         
         $perbedaanBulan = $checkIn->floatDiffInMonths($checkOut);
+
+        //Jika perbedaan bulan tidak bulat maka akan mengembalikan respon berbentuk json
         if (!is_int($perbedaanBulan)) return response()->json(['status' => false, 'message' => 'Tanggal checkin & checkout harus kelipatan 1 bulan!'], 400);
 
         $hargaSewa = $kamar->harga * $perbedaanBulan;
 
+        //mengembalikan nilai dalam bentuk html
         return "<div class='alert alert-secondary mt-2'>".
                "<p>Check In : $request->checkIn</p>".
                "<p>Check Out : $request->checkOut</p>".

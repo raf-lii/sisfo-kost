@@ -15,12 +15,16 @@ class AdminDaftarUserController extends Controller
 
     public function destroy($id)
     {
+        //Melakukan pencarian user berdasarkan id
         $user = User::where('id', $id)->first();
         
+        //Jika user tidak ditemukan akan dibawa kehalaman sebelumnya dengan membawa pesan error
         if(!$user) return back()->with('error', 'User tidak ditemukan');
 
+        //Melakukan penghapusan user yang telah dicari
         $user->delete();
 
+        //Membawa user kehalaman sebelumnya dengan membawa pesan success
         return back()->with('success', 'Berhasil menghapus user');
     }
 }
