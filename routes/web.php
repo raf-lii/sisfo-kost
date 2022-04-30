@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function() {
     
     //Perpanjang route
     Route::get('/pesanan/{id}/perpanjang',      [PerpanjangController::class, 'create'])->name("perpanjang");
+    Route::post('/pesanan/{id}/perpanjang',     [PerpanjangController::class, 'store'])->name("perpanjang.post");
 
     //Ajax tipe pembayaran route
     Route::post('/tipe-pembayaran',             [TipePembayaranController::class, 'show'])->name('ajax.tipePembayaran');

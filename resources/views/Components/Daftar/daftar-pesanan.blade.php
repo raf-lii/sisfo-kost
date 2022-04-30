@@ -12,6 +12,11 @@
     </div>
 </div>
 <!-- end page title -->
+@if(session('success'))
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
 @if(session('error'))
 <div class="alert alert-danger">
     {{ session('error') }}
@@ -43,7 +48,8 @@
                             @endphp
                             @foreach($datas as $data)
                             @php
-                                if($data->status_booking == "Jatuh Tempo"){
+                                if(($data->status_booking == "Jatuh Tempo" && $data->status_pembayaran == "Belum Lunas") ||
+                                   ($data->status_booking == "Jatuh Tempo" && $data->status_pembayaran == "Lunas")){
                                     $label = "warning";
                                 }else if($data->status_booking == "Lunas" || $data->status_booking == "Selesai"){
                                     $label = "success";
@@ -62,11 +68,12 @@
                                 <td>{{ $data->checkout }}</td>
                                 <td><span class="badge bg-{{ $label }}">{{ $data->status_booking }}</span></td>
                                 <td>
-                                    @if($data->status_booking == "Menunggu Pembayaran")
+                                    @if(($data->status_booking == "Menunggu Pembayaran" && $data->status_pembayaran == "Belum Lunas") || 
+                                         $data->status_booking == "Jatuh Tempo" && $data->status_pembayaran == "Belum Lunas")
                                     <a href="javascript:;" onclick='modal("Bayar Pesanan #{{ $data->invoice_id }}", "{{ route('pembayaran.booking', [$data->invoice_id]) }}")' class="badge bg-primary"><i data-feather="dollar-sign"></i> Bayar</a>
-                                    @elseif($data->status_booking == "Jatuh Tempo")
+                                    @elseif($data->status_booking == "Jatuh Tempo" && $data->status_pembayaran == "Lunas" )
                                     <a href="{{ route('perpanjang', [$data->id]) }}" class="badge bg-warning")><i data-feather="calendar"></i> Perpanjang</a>
-                                    @elseif($data->status_booking == "Lunas")
+                                    @elseif($data->status_booking == "Lunas" && $data->status_pembayaran == "Lunas")
                                     <a href="{{ route('detail.booking', [$data->invoice_id]) }}" class="badge bg-info"><i data-feather="eye"></i> Detail</a>
                                     @endif
                                 </td>

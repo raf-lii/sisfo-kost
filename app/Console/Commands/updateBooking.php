@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\DaftarBooking;
+use App\Models\DaftarKamar;
 use Illuminate\Support\Carbon;
 
 class updateBooking extends Command
@@ -48,7 +49,8 @@ class updateBooking extends Command
                 DaftarBooking::where('id', $data->id)->update([
                     'status_booking' => 'Selesai'
                 ]);
-
+                
+                DaftarKamar::where('id', $data->id_kamar)->increment("stock");
             }
         }
 

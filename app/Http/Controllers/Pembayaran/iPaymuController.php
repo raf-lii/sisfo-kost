@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\DaftarBooking;
+use App\Models\DaftarKamar;
 use App\Models\DaftarPembayaran;
-use Illuminate\Log\Logger;
+use Illuminate\Support\Carbon;
 
 class iPaymuController extends Controller
 {
@@ -88,9 +89,15 @@ class iPaymuController extends Controller
 
         $bookingId = $pembayaran->booking_id;
         $daftarBooking = DaftarBooking::where('invoice_id', $bookingId)->first();
+        $daftarKamar = DaftarKamar::where('id', $daftarBooking->id_kamar)->first();
 
         if ($request->status == "berhasil" || $request->status == "pending") {
 
+            if($daftarBooking->status_booking == "Jatuh Tempo"){
+                $daftarBooking->update([
+                    'checkout' => Carbon::parse($daftarBooking->checkout)->addMonth()->format("d M Y")
+                ]);
+            }
             $pembayaran->update([
                 'status_pembayaran' => 'Lunas'
             ]);
@@ -101,6 +108,8 @@ class iPaymuController extends Controller
 
             return "Sukses";
         } else if ($request->status == "gagal") {
+            $daftarKamar->increment("stock");
+
             $pembayaran->update([
                 'status_pembayaran' => 'Expired'
             ]);

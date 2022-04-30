@@ -12,12 +12,17 @@
     </div>
 </div>
 <!-- end page title -->
+@if(session('error'))
+    <div class="alert alert-warning">
+        {{ session('error') }}
+    </div>
+@enderror
 <div class="row">
     <div class="col-md-6 col-12">
         <div class="card shadow">
             <div class="card-body">
                 <h4 class="mb-3 header-title mt-0">Data Pribadi</h4>
-                <form>
+                <form action="{{ route('perpanjang.post', [$data->id]) }}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label class="form-label text-muted">Nama Lengkap</label>
@@ -58,24 +63,19 @@
                                 <select id="tipePembayaran" name="tipe" class="form-control">
                                     <option>Pilih Jenis Pembayaran</option>
                                 </select>
+                                @error('tipe'))
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                                @enderror
                             </div>
                         </div>
                     </div>
+                    <div class="d-grid mt-3">
+                        <button id="continuePayment" class="btn btn-danger btn-md">Lanjutkan Pembayaran</button>
+                    </div>
                 </form>
             </div>
-        </div>
-        <div class="alert alert-secondary">
-            <h4 class="mb-3 header-title mt-0">Kebijakan Pembatalan</h4>
-            <p>Pemesanan ini tidak dapat di refund</p>
-        </div>
-        <div class="border border-secondary bg-white p-2">
-            <h4 class="mb-3 header-title mt-0 text-muted">Catatan Penting</h4>
-            <ul>
-                <li>Mohon pastikan nama yang tertera di data pribadi sama dengan nama yang ada di KTP anda.</li>
-                <li>Jika anda membuat pesanan untuk orang lain, mohon untuk memberikan kode pesanan saat check-in.</li>
-                <li>Pastkan tanggal check-in & check-out sudah benar ketika melakukan proses pesanan.</li>
-                <li>Pelanggan diwajibkan memberikan tanda pengenal pada saat check-in.</li>
-            </ul>
         </div>
     </div>
     <div class="col-md-6 col-12">
@@ -114,9 +114,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-grid mt-3">
-                    <button id="continuePayment" class="btn btn-danger btn-md">Lanjutkan Pembayaran</button>
-                </div>
             </div>
         </div>
     </div>
@@ -137,7 +134,7 @@
                 },
                 success: function(res) {
                     $("#tipePembayaran").empty();
-                    $("#tipePembayaran").append("<option>Pilih Tipe Pembayaran</option>")
+                    $("#tipePembayaran").append("<option value=''>Pilih Tipe Pembayaran</option>")
                     $.each(res.data, function(curr, index) {
                         var el = `<option value='${index.id}' id='tipe'>${index.nama}</option>`;
                         $("#tipePembayaran").append(el)
@@ -146,69 +143,6 @@
                 }
             });
         });
-        $("#continuePayment").on("click", function() {
-            var namaPemesan = $("#nama").val();
-            var emailPemesan = $("#email").val();
-            var nomorPemesan = $("#nomor").val();
-            var metodePembayaran = $("#tipePembayaran option:selected").val();
-
-            var dataKonfirmasi = 'Nama Pemesan : ' + namaPemesan + "<br>" +
-                'Check-in : <?php echo $CheckIn ?><br>' +
-                'Check-out : <?php echo $CheckOut ?><br>' +
-                'Total Biaya : <?php echo number_format($BiayaSewa, 0, ',', '.') ?><br>' +
-                '<small class="text-red">*Harga diatas belum termasuk biaya admin</small>'
-
-            Swal.fire({
-                background: '#fff',
-                color: '#000',
-                titleText: 'Lanjutkan Pemesanan?',
-                html: `${dataKonfirmasi}`,
-                showCancelButton: true,
-                confirmButtonText: 'Ya',
-                cancelButtonText: 'Batal',
-                customClass: {
-                    title: 'swal-title',
-                    htmlContainer: 'swal-text'
-                }
-            }).then(resp => {
-                if (resp.isConfirmed) {
-                    $.ajax({
-                        url: "<?php echo route('booking.post') ?>",
-                        type: "POST",
-                        dataType: "JSON",
-                        data: {
-                            "_token": "<?php echo csrf_token() ?>",
-                            "nama": namaPemesan,
-                            "email": emailPemesan,
-                            "nomor": nomorPemesan,
-                            "tipe": metodePembayaran,
-                            "checkin": "<?php echo $CheckIn ?>",
-                            "checkout": "<?php echo $CheckOut ?>",
-                            "kamar": "<?php echo $DataKamar->id ?>"
-                        },
-                        success: function(res) {
-                            Swal.fire({
-                                title: 'Berhasil memesan!',
-                                text: `Booking ID : ${res.bookingId}`,
-                                icon: 'success',
-                                background: '#f54266',
-                                color: '#ffff',
-                            });
-                            // window.location = 
-                        },
-                        error: function(e) {
-                            Swal.fire({
-                                title: 'Oops...',
-                                text: e.responseJSON.message,
-                                icon: 'error',
-                                background: '#f54266',
-                                color: '#ffff',
-                            });
-                        }
-                    })
-                }
-            })
-        })
     });
 </script>
 @endsection

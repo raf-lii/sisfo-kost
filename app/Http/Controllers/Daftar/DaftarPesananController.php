@@ -14,12 +14,13 @@ class DaftarPesananController extends Controller
 {
     public function create()
     {
-        $data = DaftarBooking::where('username', Auth::user()->username)
+        $data = DaftarBooking::where('daftar_bookings.username', Auth::user()->username)
+                    ->join('daftar_pembayarans', 'daftar_pembayarans.booking_id', 'daftar_bookings.invoice_id')
                     ->join("daftar_kamars", "daftar_bookings.id_kamar", "=", "daftar_kamars.id")
-                    ->select("daftar_bookings.*", "daftar_kamars.nama AS nama_kamar")
+                    ->select("daftar_bookings.*", "daftar_kamars.nama AS nama_kamar", 'daftar_pembayarans.status_pembayaran')
                     ->orderBy('created_at', 'desc')
                     ->get();
-                                    
+                             
         return view('Components.Daftar.daftar-pesanan', ['datas' => $data]);
     }
 

@@ -44,12 +44,14 @@
                             @endphp
                             @foreach($datas as $data)
                             @php
-                            if($data->status_booking == "Lunas"){
-                            $label = "success";
+                            if($data->status_booking == "Lunas" || $data->status_booking == "Selesai"){
+                                $label = "success";
                             }else if($data->status_booking == "Menunggu Pembayaran"){
-                            $label = "warning";
+                                $label = "warning";
                             }else if($data->status_booking == "Kadaluarsa"){
-                            $label = "error";
+                                $label = "error";
+                            }else if($data->status_booking == "Jatuh Tempo"){
+                                $label = "warning";
                             }
                             @endphp
                             <tr>
